@@ -1,0 +1,809 @@
+/* ==========================================================================
+   PORTAL DEL HOSPITAL — Superficie 2
+   Extiende las variables de Style.css. El acento del sitio público (terracota)
+   se reserva para "convencer" a la audiencia externa; aquí, el hospital ya
+   está dentro, así que el tono cambia a un panel de trabajo: sidebar oscuro
+   fijo + contenido claro, con los colores clínicos usados con estricta
+   función semántica (semáforos, bandas de referencia, alertas).
+   ========================================================================== */
+
+:root {
+  --portal-sidebar-ancho: 264px;
+  --portal-superficie: #FFFFFF;
+  --portal-fondo: #F1F3F5;
+  --portal-borde: #E1E4E8;
+  --portal-texto-secundario: #5B6470;
+}
+
+body.portal-body {
+  background-color: var(--portal-fondo);
+  min-height: 100vh;
+}
+
+/* ---------- ESTRUCTURA ---------- */
+
+.portal-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.portal-sidebar {
+  width: var(--portal-sidebar-ancho);
+  flex-shrink: 0;
+  background-color: var(--color-marca-primario);
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.portal-sidebar-marca {
+  padding: 22px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.portal-sidebar-marca .logo-texto {
+  font-size: 22px;
+}
+
+.portal-sidebar-hospital {
+  padding: 16px 24px;
+  font-size: 13px;
+  color: #B9C4D0;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.portal-sidebar-hospital strong {
+  display: block;
+  color: #FFFFFF;
+  font-size: 15px;
+  margin-top: 2px;
+}
+
+.portal-nav {
+  list-style: none;
+  padding: 12px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.portal-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: var(--altura-minima-tactil);
+  padding: 0 24px;
+  background: none;
+  border: none;
+  color: #C7D1DB;
+  font-size: 15px;
+  font-family: var(--fuente-principal);
+  text-align: left;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+}
+
+.portal-nav-item:hover {
+  background-color: rgba(255,255,255,0.06);
+  color: #FFFFFF;
+}
+
+.portal-nav-item.activo {
+  background-color: rgba(255,255,255,0.1);
+  border-left-color: var(--color-marca-acento);
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+.portal-nav-item .num {
+  font-size: 12px;
+  color: #8394A5;
+  width: 18px;
+  flex-shrink: 0;
+}
+
+.portal-nav-item.deshabilitado {
+  color: #5C6C7D;
+  cursor: not-allowed;
+}
+
+.portal-nav-item.deshabilitado:hover {
+  background: none;
+  color: #5C6C7D;
+}
+
+.portal-sidebar-salir {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.portal-sidebar-salir a {
+  color: #C7D1DB;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.portal-sidebar-salir a:hover {
+  color: #FFFFFF;
+}
+
+.portal-main {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 40px 60px 40px;
+}
+
+.portal-seccion {
+  display: none;
+}
+
+.portal-seccion.activa {
+  display: block;
+}
+
+.portal-encabezado {
+  margin-bottom: 28px;
+}
+
+.portal-encabezado h1 {
+  font-size: 26px;
+  color: var(--color-marca-primario);
+  margin-bottom: 6px;
+}
+
+.portal-encabezado p {
+  color: var(--portal-texto-secundario);
+}
+
+/* ---------- COMPONENTES COMPARTIDOS ---------- */
+
+.portal-card {
+  background-color: var(--portal-superficie);
+  border: 1px solid var(--portal-borde);
+  border-radius: 8px;
+  padding: 22px;
+}
+
+.portal-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.portal-tarjeta-estado {
+  background-color: var(--portal-superficie);
+  border: 1px solid var(--portal-borde);
+  border-left: 4px solid var(--color-marca-primario);
+  border-radius: 8px;
+  padding: 18px 20px;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--fuente-principal);
+  transition: box-shadow 0.15s ease;
+}
+
+.portal-tarjeta-estado:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.portal-tarjeta-estado .etiqueta {
+  font-size: 13px;
+  color: var(--portal-texto-secundario);
+  margin-bottom: 6px;
+}
+
+.portal-tarjeta-estado .valor {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--color-marca-primario);
+}
+
+.portal-tarjeta-estado.alerta {
+  border-left-color: var(--color-clinico-rojo);
+}
+
+.portal-tarjeta-estado.alerta .valor {
+  color: var(--color-clinico-rojo);
+}
+
+.portal-lista-simple {
+  list-style: none;
+}
+
+.portal-lista-simple li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--portal-borde);
+  font-size: 14px;
+}
+
+.portal-lista-simple li:last-child {
+  border-bottom: none;
+}
+
+.portal-lista-simple .fecha {
+  color: var(--portal-texto-secundario);
+  margin-right: 10px;
+  font-size: 13px;
+}
+
+/* Semáforo (reutiliza colores clínicos: verde/amarillo/rojo con función estricta) */
+.semaforo-punto {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.semaforo-verde { background-color: var(--color-clinico-verde); }
+.semaforo-amarillo { background-color: var(--color-clinico-amarillo); }
+.semaforo-rojo { background-color: var(--color-clinico-rojo); }
+
+/* ---------- TABLERO (MATRIZX) ---------- */
+
+.portal-filtros-tablero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.portal-filtros-tablero select {
+  width: auto;
+  min-width: 160px;
+}
+
+.portal-grid-widgets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.portal-widget-ancho-completo {
+  grid-column: 1 / -1;
+}
+
+.portal-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+
+.portal-widget-header h3 {
+  font-size: 16px;
+  color: var(--color-marca-primario);
+}
+
+.portal-widget-header .subtitulo {
+  font-size: 12px;
+  color: var(--portal-texto-secundario);
+  margin-top: 2px;
+}
+
+.portal-btn-exportar {
+  display: inline-flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.portal-btn-mini {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: 1px solid var(--color-marca-primario);
+  background: #FFFFFF;
+  color: var(--color-marca-primario);
+  cursor: pointer;
+  font-family: var(--fuente-principal);
+}
+
+.portal-btn-mini:hover {
+  background: var(--color-marca-primario);
+  color: #FFFFFF;
+}
+
+.portal-insignia-cautela {
+  display: inline-block;
+  font-size: 11px;
+  background: #FFF3CD;
+  color: #7A5C00;
+  border: 1px solid var(--color-clinico-amarillo);
+  border-radius: 10px;
+  padding: 2px 8px;
+  margin-left: 6px;
+}
+
+.portal-chart-contenedor {
+  position: relative;
+  height: 260px;
+}
+
+.portal-chart-contenedor.alto {
+  height: 320px;
+}
+
+/* Reloj del nacimiento (heatmap manual) */
+.portal-heatmap-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.portal-heatmap-scroll {
+  overflow-x: auto;
+}
+
+.portal-heatmap {
+  display: grid;
+  grid-template-columns: 40px repeat(24, minmax(20px, 1fr));
+  gap: 2px;
+  min-width: 640px;
+}
+
+.portal-heatmap-celda {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  cursor: default;
+}
+
+.portal-heatmap-etiqueta-fila {
+  font-size: 11px;
+  color: var(--portal-texto-secundario);
+  display: flex;
+  align-items: center;
+}
+
+.portal-heatmap-etiqueta-hora {
+  font-size: 9px;
+  color: var(--portal-texto-secundario);
+  text-align: center;
+}
+
+.portal-comparativas-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--portal-borde);
+  font-size: 14px;
+}
+
+.portal-comparativas-fila:last-child {
+  border-bottom: none;
+}
+
+.portal-comparativas-barra-fondo {
+  flex: 1;
+  height: 10px;
+  background: #E9ECEF;
+  border-radius: 5px;
+  margin: 0 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-comparativas-barra {
+  height: 100%;
+  border-radius: 5px;
+  background: var(--color-marca-primario);
+}
+
+.portal-cartera-oculta {
+  font-size: 13px;
+  color: var(--portal-texto-secundario);
+  font-style: italic;
+}
+
+.portal-errores-lista {
+  list-style: none;
+  font-size: 14px;
+}
+
+.portal-errores-lista li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--portal-borde);
+}
+
+/* ---------- VERIFICACIÓN ---------- */
+
+.portal-lineas-rojas-checklist {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.portal-linea-roja-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: 1px solid var(--portal-borde);
+}
+
+.portal-linea-roja-item.cumple {
+  background: #F0FAF6;
+}
+
+.portal-linea-roja-item.no-cumple {
+  background: #FFF5F5;
+  border-color: var(--color-clinico-rojo);
+}
+
+.portal-dominio-barra-fila {
+  margin-bottom: 16px;
+}
+
+.portal-dominio-barra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.portal-dominio-barra-header .nombre {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.portal-dominio-barra-fondo {
+  height: 16px;
+  background: #E9ECEF;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.portal-dominio-barra {
+  height: 100%;
+  border-radius: 8px;
+}
+
+.portal-dominio-detalle {
+  display: none;
+  padding: 14px 16px;
+  margin-top: 8px;
+  background: var(--portal-fondo);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.portal-dominio-detalle.abierto {
+  display: block;
+}
+
+.portal-dominio-detalle .criterio-item {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--portal-borde);
+}
+
+.portal-dominio-detalle .criterio-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.portal-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--portal-borde);
+  margin-bottom: 22px;
+}
+
+.portal-tab-btn {
+  padding: 10px 18px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-family: var(--fuente-principal);
+  font-size: 14px;
+  color: var(--portal-texto-secundario);
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.portal-tab-btn.activo {
+  color: var(--color-marca-primario);
+  font-weight: bold;
+  border-bottom-color: var(--color-marca-acento);
+}
+
+.portal-tab-panel {
+  display: none;
+}
+
+.portal-tab-panel.activo {
+  display: block;
+}
+
+.portal-area-mejora-card {
+  border: 1px solid var(--portal-borde);
+  border-radius: 8px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.portal-area-mejora-etiquetas {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.portal-etiqueta-impacto,
+.portal-etiqueta-esfuerzo {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.impacto-alto { background: #FFF3CD; color: #7A5C00; }
+.impacto-medio { background: #E0F2FE; color: #0369A1; }
+.impacto-bajo { background: #E9ECEF; color: #495057; }
+.esfuerzo-bajo { background: #E2F0D9; color: #1E4620; }
+.esfuerzo-medio { background: #FEE8D6; color: #8A4B0F; }
+.esfuerzo-alto { background: #FFE0E0; color: #8A0F0F; }
+
+.portal-area-mejora-meta {
+  font-size: 12px;
+  color: var(--portal-texto-secundario);
+  margin-bottom: 12px;
+}
+
+.portal-area-mejora-avance textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 8px 10px;
+  border: 1px solid var(--portal-borde);
+  border-radius: 6px;
+  font-family: var(--fuente-principal);
+  font-size: 13px;
+  resize: vertical;
+}
+
+.portal-historial-tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.portal-historial-tabla th,
+.portal-historial-tabla td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--portal-borde);
+  font-size: 14px;
+}
+
+/* ---------- MI SELLO ---------- */
+
+.portal-sello-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+}
+
+.portal-sello-insignia-grande {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.portal-sello-insignia-grande img,
+.portal-sello-insignia-grande object {
+  width: 180px;
+  height: 180px;
+}
+
+.portal-kit-lista {
+  list-style: none;
+}
+
+.portal-kit-lista li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--portal-borde);
+}
+
+.portal-estado-suspendido {
+  background: #FFF5F5;
+  border: 1px solid var(--color-clinico-rojo);
+  color: #7A0000;
+  padding: 14px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+/* ---------- PRE-AUDITORÍA ---------- */
+
+.portal-preauditoria-bloque {
+  margin-bottom: 26px;
+}
+
+.portal-preauditoria-criterio {
+  border: 1px solid var(--portal-borde);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.portal-preauditoria-escalones {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.portal-escalon-opcion {
+  border: 2px solid var(--portal-borde);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  min-height: 64px;
+}
+
+.portal-escalon-opcion input {
+  margin-right: 6px;
+}
+
+.portal-escalon-opcion.seleccionado {
+  border-color: var(--color-marca-primario);
+  background: #EAF1F8;
+}
+
+.portal-preauditoria-evidencia {
+  margin-top: 10px;
+}
+
+.portal-brecha-resultado {
+  margin-top: 20px;
+  padding: 18px;
+  background: var(--portal-fondo);
+  border-radius: 8px;
+}
+
+.portal-brecha-fila {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px solid var(--portal-borde);
+}
+
+/* ---------- MIS DATOS ---------- */
+
+.portal-dropzone {
+  border: 2px dashed #ADB5BD;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--portal-texto-secundario);
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.portal-dropzone.arrastrando {
+  border-color: var(--color-marca-primario);
+  background: #EAF1F8;
+  color: var(--color-marca-primario);
+}
+
+.portal-reporte-calidad {
+  margin-top: 20px;
+}
+
+.portal-form-cuestionario fieldset {
+  border: none;
+  margin-bottom: 26px;
+}
+
+.portal-form-cuestionario legend {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--color-marca-primario);
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--portal-borde);
+  width: 100%;
+}
+
+.portal-form-cuestionario .campo-fila {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.portal-form-cuestionario label {
+  font-size: 14px;
+}
+
+.portal-progreso-cuestionario {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.portal-progreso-barra-fondo {
+  flex: 1;
+  height: 10px;
+  background: #E9ECEF;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.portal-progreso-barra {
+  height: 100%;
+  background: var(--color-clinico-verde);
+}
+
+/* ---------- ESTADOS DE MENSAJE ---------- */
+
+.portal-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--color-marca-primario);
+  color: #FFFFFF;
+  padding: 14px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  z-index: 3000;
+  max-width: 340px;
+}
+
+.portal-toast.error {
+  background: var(--color-clinico-rojo);
+}
+
+.portal-toast.hidden {
+  display: none;
+}
+
+.portal-proximamente {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--portal-texto-secundario);
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 1024px) {
+  .portal-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .portal-grid-widgets { grid-template-columns: 1fr; }
+  .portal-sello-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .portal-layout { flex-direction: column; }
+  .portal-sidebar { width: 100%; height: auto; position: relative; }
+  .portal-nav { display: flex; flex-wrap: wrap; padding: 8px; }
+  .portal-nav-item { width: auto; min-height: 44px; border-left: none; border-bottom: 3px solid transparent; }
+  .portal-nav-item.activo { border-left: none; border-bottom-color: var(--color-marca-acento); }
+  .portal-main { padding: 20px; }
+  .portal-grid-4 { grid-template-columns: 1fr; }
+  .portal-lineas-rojas-checklist { grid-template-columns: 1fr; }
+  .portal-form-cuestionario .campo-fila { grid-template-columns: 1fr; }
+}

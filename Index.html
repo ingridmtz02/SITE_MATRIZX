@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MATRIZX — Plataforma de Calidad Materno-Neonatal</title>
+  <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+
+  <!-- BANNER PERSISTENTE DE RED / ERRORES -->
+  <div id="banner-error" class="banner-error hidden" role="alert" aria-live="assertive">
+    <span>⚠️ Ocurrió un inconveniente al enviar la información. Tus datos están guardados localmente. Puedes reintentar.</span>
+    <button type="button" class="btn-cerrar-banner" onclick="ocultarBannerError()" aria-label="Cerrar aviso">✕</button>
+  </div>
+
+  <!-- ENCABEZADO Y NAVEGACIÓN PRINCIPAL -->
+  <header class="header-principal">
+    <div class="contenedor header-contenido">
+      <a href="#home" class="logo-matriz">
+       <span class="logo-texto">Matri<span class="logo-zx">ZX</span></span>
+
+      </a>
+      <nav class="nav-principal" aria-label="Navegación principal">
+        <ul>
+          <li><a href="#home" class="nav-link activo">Inicio</a></li>
+          <li><a href="#catalogo" class="nav-link">Catálogo</a></li>
+          <li><a href="#el-sello" class="nav-link">El Sello</a></li>
+          <li><a href="#para-hospitales" class="nav-link">Para Hospitales</a></li>
+          <li><a href="#contacto" class="nav-link">Contacto</a></li>
+        </ul>
+      </nav>
+      <div class="acciones-header">
+        <!-- Login Unificado para todos los roles (Hospital, Auditora, Comité, Admin) -->
+        <button type="button" class="btn btn-secundario" onclick="abrirModalLogin()">Iniciar Sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- SECCIÓN 1: HOME (HERO DUAL) -->
+    <section id="home" class="seccion-hero">
+      <div class="contenedor grid-hero">
+        <!-- Subsección para Mujeres -->
+        <div class="hero-texto">
+          <span class="tagline">Nacer seguro, parir con respeto</span>
+          <h1>Encuentra un hospital comprometido con una atención digna y basada en evidencia</h1>
+          <p>Evaluamos procesos reales en piso, la voz de las mujeres y el cumplimiento normativo para garantizar un entorno seguro.</p>
+
+          <!-- Buscador Rápido del Catálogo -->
+          <form class="buscador-rapido-hero" onsubmit="buscarDesdeHero(event)">
+            <div class="grupo-input">
+              <label for="hero-ubicacion">Estado / Ciudad</label>
+              <select id="hero-ubicacion" class="control-tactil">
+                <option value="">Todos los estados</option>
+                <option value="Jalisco">Jalisco</option>
+                <option value="CDMX">Ciudad de México</option>
+                <option value="Nuevo León">Nuevo León</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primario btn-bloque-tactil">Buscar Hospital</button>
+          </form>
+        </div>
+
+        <!-- Tarjeta explicativa de los 3 pasos -->
+        <div class="hero-pasos-card">
+          <h2>¿Cómo funciona el Sello?</h2>
+          <ol class="lista-pasos-visuales">
+            <li>
+              <span class="paso-num">1</span>
+              <div>
+                <strong>Evaluación Real en Piso</strong>
+                <p>Verificamos en dos turnos (día y noche), no solo en carpetas.</p>
+              </div>
+            </li>
+            <li>
+              <span class="paso-num">2</span>
+              <div>
+                <strong>Escuchamos a las Mujeres</strong>
+                <p>Entrevistamos a las usuarias antes de su alta sin personal presente.</p>
+              </div>
+            </li>
+            <li>
+              <span class="paso-num">3</span>
+              <div>
+                <strong>Líneas Rojas Obligatorias</strong>
+                <p>Ningún hospital obtiene el sello sin cumplir los 7 mínimos no negociables.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: CATÁLOGO DE HOSPITALES (Transparencia Asimétrica) -->
+    <section id="catalogo" class="seccion-catalogo">
+      <div class="contenedor">
+        <div class="encabezado-seccion">
+          <h2>Catálogo Público de Hospitales Sellados</h2>
+          <p>Transparencia pública: consulta el nivel e insignia vigentes. Los desgloses y puntajes numéricos son privados de cada institución.</p>
+        </div>
+
+        <!-- Filtros Directos -->
+        <div class="barra-filtros">
+          <div class="filtro-item">
+            <label for="filtro-estado">Ubicación:</label>
+            <select id="filtro-estado" class="control-tactil" onchange="filtrarCatalogo()">
+              <option value="todos">Todos los Estados</option>
+              <option value="Jalisco">Jalisco</option>
+              <option value="CDMX">Ciudad de México</option>
+              <option value="Nuevo León">Nuevo León</option>
+            </select>
+          </div>
+          <div class="filtro-item">
+            <label for="filtro-nivel">Nivel de Sello:</label>
+            <select id="filtro-nivel" class="control-tactil" onchange="filtrarCatalogo()">
+              <option value="todos">Todos los Niveles</option>
+              <option value="nivel1">Nivel 1 — Comprometido</option>
+              <option value="nivel2">Nivel 2 — Consolidado</option>
+              <option value="nivel3">Nivel 3 — Referente</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Contenedor de Tarjetas (Renderizado por JS) -->
+        <div id="contenedor-tarjetas-hospitales" class="grid-catalogo">
+          <!-- Se insertan dinámicamente o se muestra estado vacío -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: EL SELLO (Metodología explicada a la ciudadanía) -->
+    <section id="el-sello" class="seccion-el-sello">
+      <div class="contenedor">
+        <div class="encabezado-seccion">
+          <h2>¿Qué significa el Sello Maternidad Segura y Respetada?</h2>
+          <p>Tres mínimos que ningún hospital puede excusar: Escucha, Respeto y Movimiento.</p>
+        </div>
+
+        <!-- Niveles del Sello -->
+        <div class="grid-tres-columnas">
+          <div class="tarjeta-nivel nivel-1">
+            <div class="insignia-demo nivel-1-badge">
+              <span class="icono-nivel" aria-hidden="true">🛡️</span>
+              <span class="texto-nivel">Nivel 1 — Comprometido</span>
+            </div>
+            <p>El hospital cumple la ley (NOM-007, triage), respeta los mínimos no negociables y mide activamente sus datos.</p>
+          </div>
+
+          <div class="tarjeta-nivel nivel-2">
+            <div class="insignia-demo nivel-2-badge">
+              <span class="icono-nivel" aria-hidden="true">⭐</span>
+              <span class="texto-nivel">Nivel 2 — Consolidado</span>
+            </div>
+            <p>Los procesos funcionan de verdad en ambos turnos (día/noche) y muestran tendencias sostenidas de mejora.</p>
+          </div>
+
+          <div class="tarjeta-nivel nivel-3">
+            <div class="insignia-demo nivel-3-badge">
+              <span class="icono-nivel" aria-hidden="true">🏆</span>
+              <span class="texto-nivel">Nivel 3 — Referente</span>
+            </div>
+            <p>Estándar aspiracional con voz de la mujer sobresaliente, registro Robson completo y máxima calidad clínica.</p>
+          </div>
+        </div>
+
+        <!-- Bloque de Líneas Rojas -->
+        <div class="caja-lineas-rojas">
+          <h3>Lo que NINGÚN hospital sellado puede dejar de cumplir (Líneas Rojas)</h3>
+          <ul class="grid-lineas-rojas">
+            <li>✓ Partograma integrado en expediente de trabajo de parto</li>
+            <li>✓ Acompañamiento continuo por la persona elegida</li>
+            <li>✓ Contacto piel a piel y lactancia en primeros 30 min</li>
+            <li>✓ Triage obstétrico y Código Mater implementados</li>
+            <li>✓ Comité de morbimortalidad activa con actas</li>
+            <li>✓ No restricción injustificada del movimiento</li>
+            <li>✓ No exposición: privacidad efectiva durante el proceso</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4: PARA HOSPITALES (Captación y Proceso) -->
+    <section id="para-hospitales" class="seccion-para-hospitales">
+      <div class="contenedor">
+        <div class="encabezado-seccion">
+          <h2>Diferencia a tu Hospital con Calidad Medible</h2>
+          <p>Un proceso riguroso en 8 pasos que combina autoevaluación, datos reales y verificación en piso.</p>
+        </div>
+
+        <div class="grid-hospitales-info">
+          <div class="info-proceso">
+            <h3>El proceso de verificación</h3>
+            <ol class="pasos-hospitales">
+              <li>Registro y autoevaluación guiada</li>
+              <li>Análisis de datos SINAC/Censo</li>
+              <li>Pre-auditoría y diagnóstico de brechas</li>
+              <li>Visita de verificación in situ (2 turnos)</li>
+              <li>Entrevistas a mujeres y personal</li>
+              <li>Cálculo en el motor de puntuación</li>
+              <li>Dictamen del Comité Técnico</li>
+              <li>Otorgamiento del Sello e insignia pública</li>
+            </ol>
+            <div class="bloque-descarga-estandar">
+              <a href="#estandar-descargar" class="btn btn-secundario btn-bloque-tactil" onclick="alert('Descargando Estándar v0.2 de Maternidad Segura y Respetada...'); return false;">📄 Descargar Estándar Completo (PDF)</a>
+            </div>
+          </div>
+
+          <!-- Formulario de Solicitud con Resguardo Local -->
+          <div class="form-contenedor-card" id="contacto">
+            <h3>Solicita información para tu institución</h3>
+            <form id="form-solicitud-hospital" onsubmit="guardarEnviarSolicitud(event)">
+              
+              <div class="grupo-input">
+                <label for="sol-nombre">Nombre de contacto *</label>
+                <input type="text" id="sol-nombre" class="control-tactil" required placeholder="Ej. Dra. María López">
+              </div>
+
+              <div class="grupo-input">
+                <label for="sol-cargo">Cargo *</label>
+                <input type="text" id="sol-cargo" class="control-tactil" required placeholder="Ej. Directora de Calidad">
+              </div>
+
+              <div class="grupo-input">
+                <label for="sol-hospital">Nombre del Hospital *</label>
+                <input type="text" id="sol-hospital" class="control-tactil" required placeholder="Ej. Hospital San Rafael">
+              </div>
+
+              <div class="grupo-input">
+                <label for="sol-correo">Correo corporativo *</label>
+                <input type="email" id="sol-correo" class="control-tactil" required placeholder="contacto@hospital.com">
+              </div>
+
+              <!-- Control Stepper para Variable Numérica (Evita teclear con guantes/móvil) -->
+              <div class="grupo-input">
+                <label for="sol-nacimientos">Nacimientos estimados al año</label>
+                <div class="stepper-contenedor">
+                  <button type="button" class="btn-stepper" onclick="cambiarStepper('sol-nacimientos', -50)" aria-label="Disminuir 50 nacimientos">-</button>
+                  <input type="number" id="sol-nacimientos" class="input-stepper control-tactil" value="200" min="10" step="10" readonly>
+                  <button type="button" class="btn-stepper" onclick="cambiarStepper('sol-nacimientos', 50)" aria-label="Aumentar 50 nacimientos">+</button>
+                </div>
+              </div>
+
+              <div class="aviso-privacidad-caja">
+                <small>Al enviar este formulario aceptas nuestro <strong>Aviso de Privacidad Simplificado</strong>. Tus datos de salud e institución están protegidos por ley.</small>
+              </div>
+
+              <button type="submit" class="btn btn-primario btn-bloque-tactil">Enviar Solicitud</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL DE LOGIN UNIFICADO -->
+  <div id="modal-login" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-login">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h2 id="titulo-modal-login">Iniciar Sesión — MATRIZX</h2>
+        <button type="button" class="btn-cerrar-modal" onclick="cerrarModalLogin()" aria-label="Cerrar ventana">✕</button>
+      </div>
+      <form id="form-login-unificado" onsubmit="procesarLogin(event)">
+        <p class="instruccion-login"><small>Un solo acceso para todos los roles (Hospital, Auditora, Comité o Administración).</small></p>
+        
+        <div class="grupo-input">
+          <label for="login-correo">Correo electrónico</label>
+          <input type="email" id="login-correo" class="control-tactil" required placeholder="usuario@matrizx.com">
+        </div>
+
+        <div class="grupo-input">
+          <label for="login-pass">Contraseña</label>
+          <input type="password" id="login-pass" class="control-tactil" required placeholder="••••••••">
+        </div>
+
+        <button type="submit" class="btn btn-primario btn-bloque-tactil">Entrar a la Plataforma</button>
+        <div class="login-footer">
+          <a href="#" onclick="alert('Función de recuperación por correo enviada.'); return false;">¿Olvidaste tu contraseña?</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="footer-principal">
+    <div class="contenedor grid-footer">
+      <div>
+        <span class="logo-texto">Matri<span class="logo-zx">ZX</span></span>
+        <p>Instrumento de evaluación y mejora continua de la atención materno-neonatal en México.</p>
+      </div>
+      <div>
+        <h4>Enlaces</h4>
+        <ul>
+          <li><a href="#home">Inicio</a></li>
+          <li><a href="#catalogo">Catálogo</a></li>
+          <li><a href="#para-hospitales">Certificación</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Aviso de Privacidad Simplificado</a></li>
+          <li><a href="#">Términos del Servicio</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MATRIZX. Todos los derechos reservados. Escucha, respeto, movimiento.</p>
+    </div>
+  </footer>
+
+  <script src="code.js"></script>
+</body>
+</html>

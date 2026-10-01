@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal del Hospital — MatriZX</title>
+  <link rel="stylesheet" href="Style.css">
+  <link rel="stylesheet" href="portal.css">
+  <script src="chart.umd.js"></script>
+</head>
+<body class="portal-body">
+
+  <div class="portal-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="portal-sidebar">
+      <div class="portal-sidebar-marca">
+        <span class="logo-texto">Matri<span class="logo-zx">ZX</span></span>
+      </div>
+      <div class="portal-sidebar-hospital">
+        Sesión de
+        <strong id="sidebar-nombre-hospital">Cargando…</strong>
+      </div>
+
+      <ul class="portal-nav" id="portal-nav">
+        <li><button class="portal-nav-item activo" data-seccion="inicio"><span class="num">1</span> Inicio</button></li>
+        <li><button class="portal-nav-item" data-seccion="tablero"><span class="num">2</span> Mi tablero</button></li>
+        <li><button class="portal-nav-item" data-seccion="verificacion"><span class="num">3</span> Mi verificación</button></li>
+        <li><button class="portal-nav-item" data-seccion="sello"><span class="num">4</span> Mi sello</button></li>
+        <li><button class="portal-nav-item" data-seccion="preauditoria"><span class="num">5</span> Pre-auditoría</button></li>
+        <li><button class="portal-nav-item" data-seccion="mis-datos"><span class="num">6</span> Mis datos</button></li>
+        <li><button class="portal-nav-item deshabilitado" disabled><span class="num">7</span> Próximamente</button></li>
+        <li><button class="portal-nav-item deshabilitado" disabled><span class="num">8</span> Próximamente</button></li>
+      </ul>
+
+      <div class="portal-sidebar-salir">
+        <a href="Index.html">← Salir al sitio público</a>
+      </div>
+    </aside>
+
+    <!-- ================= CONTENIDO ================= -->
+    <main class="portal-main">
+
+      <!-- 1. INICIO (RESUMEN) -->
+      <section class="portal-seccion activa" id="seccion-inicio">
+        <div class="portal-encabezado">
+          <h1 id="inicio-saludo">Hola</h1>
+          <p>Este es el estado de tu hospital en MatriZX.</p>
+        </div>
+
+        <div class="portal-grid-4" id="inicio-tarjetas">
+          <!-- Tarjetas insertadas por JS -->
+        </div>
+
+        <div class="portal-grid-widgets">
+          <div class="portal-card">
+            <div class="portal-widget-header"><h3>Novedades</h3></div>
+            <ul class="portal-lista-simple" id="inicio-novedades"></ul>
+          </div>
+          <div class="portal-card">
+            <div class="portal-widget-header"><h3>Alertas activas</h3></div>
+            <ul class="portal-lista-simple" id="inicio-alertas"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. MI TABLERO (MATRIZX) -->
+      <section class="portal-seccion" id="seccion-tablero">
+        <div class="portal-encabezado">
+          <h1>Mi tablero — MatriZX</h1>
+          <p>Toda cifra muestra su denominador (n) al pasar el cursor. Menos de 30 casos se marca para interpretar con cautela.</p>
+        </div>
+
+        <div class="portal-filtros-tablero">
+          <label for="tablero-periodo"><strong>Periodo:</strong></label>
+          <select id="tablero-periodo" class="control-tactil">
+            <option value="6m">Últimos 6 meses</option>
+            <option value="12m" selected>Últimos 12 meses</option>
+          </select>
+        </div>
+
+        <div class="portal-grid-widgets">
+
+          <!-- Robson -->
+          <div class="portal-card portal-widget-ancho-completo">
+            <div class="portal-widget-header">
+              <div>
+                <h3>Robson adaptado</h3>
+                <div class="subtitulo">Tasa de cesárea y contribución al total por grupo, con banda de referencia GPC</div>
+              </div>
+              <div class="portal-btn-exportar">
+                <button class="portal-btn-mini" onclick="exportarPNG('grafico-robson', 'robson')">PNG</button>
+                <button class="portal-btn-mini" onclick="exportarCSVRobson()">CSV</button>
+              </div>
+            </div>
+            <div class="portal-chart-contenedor alto"><canvas id="grafico-robson"></canvas></div>
+          </div>
+
+          <!-- Tendencia mensual -->
+          <div class="portal-card">
+            <div class="portal-widget-header">
+              <div>
+                <h3>Nacimientos por vía</h3>
+                <div class="subtitulo">Tendencia mensual, parto vs. cesárea</div>
+              </div>
+              <div class="portal-btn-exportar">
+                <button class="portal-btn-mini" onclick="exportarPNG('grafico-tendencia', 'tendencia_mensual')">PNG</button>
+                <button class="portal-btn-mini" onclick="exportarCSVTendencia()">CSV</button>
+              </div>
+            </div>
+            <div class="portal-chart-contenedor"><canvas id="grafico-tendencia"></canvas></div>
+          </div>
+
+          <!-- Indicadores neonatales -->
+          <div class="portal-card">
+            <div class="portal-widget-header">
+              <div>
+                <h3>Indicadores neonatales</h3>
+                <div class="subtitulo">Apgar &lt;7, prematurez y programados 37–38 SDG</div>
+              </div>
+              <div class="portal-btn-exportar">
+                <button class="portal-btn-mini" onclick="exportarPNG('grafico-neonatal', 'neonatal')">PNG</button>
+                <button class="portal-btn-mini" onclick="exportarCSVNeonatal()">CSV</button>
+              </div>
+            </div>
+            <div class="portal-chart-contenedor"><canvas id="grafico-neonatal"></canvas></div>
+          </div>
+
+          <!-- Reloj del nacimiento -->
+          <div class="portal-card portal-widget-ancho-completo">
+            <div class="portal-widget-header">
+              <div>
+                <h3>Reloj del nacimiento</h3>
+                <div class="subtitulo">Nacimientos por hora del día y día de la semana</div>
+              </div>
+              <div class="portal-btn-exportar">
+                <button class="portal-btn-mini" onclick="exportarCSVReloj()">CSV</button>
+              </div>
+            </div>
+            <div class="portal-heatmap-toggle">
+              <button class="portal-btn-mini activo" id="btn-reloj-parto" onclick="cambiarVistaReloj('parto')">Parto</button>
+              <button class="portal-btn-mini" id="btn-reloj-cesarea" onclick="cambiarVistaReloj('cesarea')">Cesárea</button>
+            </div>
+            <div class="portal-heatmap-scroll">
+              <div class="portal-heatmap" id="portal-heatmap"></div>
+            </div>
+          </div>
+
+          <!-- Comparativas -->
+          <div class="portal-card">
+            <div class="portal-widget-header"><h3>Comparativas</h3></div>
+            <div id="tablero-comparativas"></div>
+          </div>
+
+          <!-- Calidad de captura -->
+          <div class="portal-card">
+            <div class="portal-widget-header"><h3>Calidad de mi captura SINAC</h3></div>
+            <div id="tablero-calidad-captura"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 3. MI VERIFICACIÓN -->
+      <section class="portal-seccion" id="seccion-verificacion">
+        <div class="portal-encabezado">
+          <h1>Mi verificación</h1>
+          <p>Resultados por dominio de la última verificación en piso.</p>
+        </div>
+
+        <div class="portal-card" style="margin-bottom: 24px;">
+          <div class="portal-widget-header"><h3>Líneas rojas (mínimos no negociables)</h3></div>
+          <div class="portal-lineas-rojas-checklist" id="verificacion-lineas-rojas"></div>
+        </div>
+
+        <div class="portal-tabs">
+          <button class="portal-tab-btn activo" data-tab="dominios">Dominios</button>
+          <button class="portal-tab-btn" data-tab="mejora">Áreas de mejora</button>
+          <button class="portal-tab-btn" data-tab="historial">Historial</button>
+        </div>
+
+        <div class="portal-tab-panel activo" id="tab-dominios">
+          <div class="portal-card" id="verificacion-dominios"></div>
+        </div>
+
+        <div class="portal-tab-panel" id="tab-mejora">
+          <div id="verificacion-areas-mejora"></div>
+        </div>
+
+        <div class="portal-tab-panel" id="tab-historial">
+          <div class="portal-card">
+            <table class="portal-historial-tabla">
+              <thead><tr><th>Fecha</th><th>Nivel resultante</th><th>Puntaje global</th></tr></thead>
+              <tbody id="verificacion-historial-cuerpo"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. MI SELLO -->
+      <section class="portal-seccion" id="seccion-sello">
+        <div class="portal-encabezado">
+          <h1>Mi sello</h1>
+          <p>Insignia vigente, kit de marca y reglas de uso.</p>
+        </div>
+
+        <div id="sello-estado-suspendido"></div>
+
+        <div class="portal-card portal-sello-grid">
+          <div class="portal-sello-insignia-grande">
+            <object id="sello-insignia-svg" data="" type="image/svg+xml" width="180" height="180"></object>
+            <strong id="sello-nivel-nombre"></strong>
+            <span id="sello-vigencia-texto" class="vigencia-texto"></span>
+          </div>
+          <div>
+            <h3 style="margin-bottom: 12px; color: var(--color-marca-primario);">Kit de marca descargable</h3>
+            <ul class="portal-kit-lista" id="sello-kit-lista"></ul>
+            <p style="margin-top: 18px; font-size: 14px;">
+              <a id="sello-ficha-publica" href="#" target="_blank">Ver mi ficha en el catálogo público →</a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. PRE-AUDITORÍA -->
+      <section class="portal-seccion" id="seccion-preauditoria">
+        <div class="portal-encabezado">
+          <h1>Pre-auditoría</h1>
+          <p>Autoevaluación guiada contra el Estándar v0.1. Esta es una estimación propia y no sustituye el dictamen del Comité Técnico.</p>
+        </div>
+
+        <form id="form-preauditoria"></form>
+
+        <div style="display:flex; gap:14px; margin-top: 10px;">
+          <button type="button" class="btn btn-primario" style="width:auto; padding: 0 24px;" onclick="enviarAutoevaluacion()">Ver mi brecha estimada</button>
+          <button type="button" class="btn btn-secundario" style="width:auto; padding: 0 24px;" onclick="alert('Un especialista de MatriZ te contactará para agendar el diagnóstico de brechas formal.')">Contratar diagnóstico formal</button>
+        </div>
+
+        <div class="portal-brecha-resultado" id="preauditoria-resultado" style="display:none;"></div>
+      </section>
+
+      <!-- 6. MIS DATOS -->
+      <section class="portal-seccion" id="seccion-mis-datos">
+        <div class="portal-encabezado">
+          <h1>Mis datos</h1>
+          <p>Carga anual SINAC y cuestionario estructural.</p>
+        </div>
+
+        <div class="portal-card" style="margin-bottom: 24px;">
+          <div class="portal-widget-header"><h3>Carga SINAC</h3></div>
+          <div class="portal-dropzone" id="sinac-dropzone">
+            <p><strong>Arrastra aquí tu archivo .csv de SINAC</strong></p>
+            <p>o haz clic para seleccionarlo</p>
+            <input type="file" id="sinac-input" accept=".csv" style="display:none;">
+          </div>
+          <div class="portal-reporte-calidad" id="sinac-reporte"></div>
+
+          <h4 style="margin-top: 26px; margin-bottom: 10px; color: var(--color-marca-primario);">Historial de cargas</h4>
+          <table class="portal-historial-tabla">
+            <thead><tr><th>Fecha</th><th>Archivo</th><th>Registros</th><th>% Limpios</th></tr></thead>
+            <tbody id="sinac-historial-cuerpo"></tbody>
+          </table>
+        </div>
+
+        <div class="portal-card">
+          <div class="portal-widget-header"><h3>Cuestionario estructural anual</h3></div>
+          <div class="portal-progreso-cuestionario">
+            <div class="portal-progreso-barra-fondo"><div class="portal-progreso-barra" id="cuestionario-progreso-barra" style="width:0%"></div></div>
+            <span id="cuestionario-progreso-texto">0% completado</span>
+          </div>
+          <form class="portal-form-cuestionario" id="form-cuestionario"></form>
+          <button type="button" class="btn btn-primario" style="width:auto; padding: 0 24px;" onclick="guardarCuestionarioParcial()">Guardar avance</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="portal-toast hidden" id="portal-toast"></div>
+
+  <script src="portal.js"></script>
+</body>
+</html>
