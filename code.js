@@ -6,33 +6,69 @@ const API_BASE_URL = "http://127.0.0.1:8000/api/v1";
 const FORM_STORAGE_KEY = "matriz_borrador_solicitud_v1";
 
 document.addEventListener("DOMContentLoaded", () => {
-  cargarCatalogoDesdePython();
+  cargarCatalogo();
   restaurarBorradorSolicitud();
 });
 
 /* ==========================================================================
-   1. CONSUMO DEL CATÁLOGO DESDE PYTHON (TRANSPARENCIA ASIMÉTRICA)
+   1. CATÁLOGO PÚBLICO (TRANSPARENCIA ASIMÉTRICA) — DATOS LOCALES
+   Vive en el propio frontend para que el catálogo funcione también en un
+   hosting estático (GitHub Pages) sin necesidad de levantar app.py.
+   Si agregas/editas hospitales en HOSPITALES_DB (app.py), refleja el mismo
+   cambio aquí para que ambas fuentes no se desincronicen.
    ========================================================================== */
 
-async function cargarCatalogoDesdePython() {
+const HOSPITALES_LOCAL = [
+  {
+    id: "hosp-1",
+    nombre: "Hospital de la Mujer Jalisco",
+    ciudad: "Guadalajara",
+    estado: "Jalisco",
+    nivel: "nivel3",
+    nivelNombre: "Nivel 3 — Referente",
+    icono: "🏆",
+    claseBadge: "badge-nivel3",
+    vigencia: "Agosto 2027"
+  },
+  {
+    id: "hosp-2",
+    nombre: "Clínica Materna del Sol",
+    ciudad: "Zapopan",
+    estado: "Jalisco",
+    nivel: "nivel2",
+    nivelNombre: "Nivel 2 — Consolidado",
+    icono: "⭐",
+    claseBadge: "badge-nivel2",
+    vigencia: "Diciembre 2026"
+  },
+  {
+    id: "hosp-3",
+    nombre: "Hospital San Rafael",
+    ciudad: "Ciudad de México",
+    estado: "CDMX",
+    nivel: "nivel1",
+    nivelNombre: "Nivel 1 — Comprometido",
+    icono: "🛡️",
+    claseBadge: "badge-nivel1",
+    vigencia: "Octubre 2026"
+  }
+];
+
+function cargarCatalogo() {
   const estadoSel = document.getElementById("filtro-estado").value;
   const nivelSel = document.getElementById("filtro-nivel").value;
 
-  try {
-    const queryParams = new URLSearchParams({
-      estado: estadoSel,
-      nivel: nivelSel
-    });
+  let resultados = HOSPITALES_LOCAL;
 
-    const respuesta = await fetch(`${API_BASE_URL}/hospitales?${queryParams.toString()}`);
-    if (!respuesta.ok) throw new Error("Error al consultar el catálogo");
-
-    const hospitales = await respuesta.json();
-    renderizarCatalogo(hospitales);
-  } catch (error) {
-    console.error("Falla de conexión con API Python:", error);
-    mostrarBannerError();
+  if (estadoSel && estadoSel !== "todos") {
+    resultados = resultados.filter(h => h.estado.toLowerCase() === estadoSel.toLowerCase());
   }
+
+  if (nivelSel && nivelSel !== "todos") {
+    resultados = resultados.filter(h => h.nivel === nivelSel);
+  }
+
+  renderizarCatalogo(resultados);
 }
 
 function renderizarCatalogo(lista) {
@@ -69,7 +105,7 @@ function renderizarCatalogo(lista) {
 }
 
 function filtrarCatalogo() {
-  cargarCatalogoDesdePython();
+  cargarCatalogo();
 }
 
 function buscarDesdeHero(e) {
